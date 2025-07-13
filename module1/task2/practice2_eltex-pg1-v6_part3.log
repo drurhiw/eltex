@@ -1,0 +1,201 @@
+2. root@eltex-practice2-pg1-v6:~# git config --global user.name drurhiw
+root@eltex-practice2-pg1-v6:~# git config --global user.email DS020904@mail.ru
+root@eltex-practice2-pg1-v6:~# git config --global init.defaultBranch main
+
+3. apt update
+apt install git gh
+
+4. root@eltex-practice2-pg1-v6:~# ssh-keygen -t ed25519 -f ~/.ssh/drurhiw
+Generating public/private ed25519 key pair.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/drurhiw
+Your public key has been saved in /root/.ssh/drurhiw.pub
+The key fingerprint is:
+SHA256:p3l1o8QbucwfXjngbQaJtki6siHhUVJ+L3lkNFX3BEs root@eltex-practice2-pg1-v6
+The key's randomart image is:
++--[ED25519 256]--+
+|     .   o....Eo.|
+|    o   . .  ..o.|
+|   . o . o    . .|
+|    o . =  ....  |
+|   o   oS+.o*+o  |
+|  . o   =+o=o*+..|
+|   o . .o...*..*.|
+|    ... ..   ooo.|
+|     .o.      o  |
++----[SHA256]-----+
+
+5. root@eltex-practice2-pg1-v6:~# gh auth login
+? What account do you want to log into? GitHub.com
+? What is your preferred protocol for Git operations on this host? SSH
+? Upload your SSH public key to your GitHub account? /root/.ssh/drurhiw.pub
+? Title for your SSH key: drurhiw
+? How would you like to authenticate GitHub CLI? Login with a web browser
+
+! First copy your one-time code: BA89-79F2
+Press Enter to open github.com in your browser... 
+! Failed opening a web browser at https://github.com/login/device
+  exec: "xdg-open,x-www-browser,www-browser,wslview": executable file not found in $PATH
+  Please try entering the URL in your browser manually
+✓ Authentication complete.
+- gh config set -h github.com git_protocol ssh
+✓ Configured git protocol
+! Authentication credentials saved in plain text
+✓ Uploaded the SSH key to your GitHub account: /root/.ssh/drurhiw.pub
+✓ Logged in as drurhiw
+root@eltex-practice2-pg1-v6:~# 
+
+6. root@eltex-practice2-pg1-v6:~# gh auth setup-git --hostname github.com
+
+7. root@eltex-practice2-pg1-v6:~# gh auth status
+github.com
+  ✓ Logged in to github.com account drurhiw (/root/.config/gh/hosts.yml)
+  - Active account: true
+  - Git operations protocol: ssh
+  - Token: gho_************************************
+  - Token scopes: 'admin:public_key', 'gist', 'read:org', 'repo'
+root@eltex-practice2-pg1-v6:~# 
+
+8. root@eltex-practice2-pg1-v6:~# gh repo create --public eltex
+✓ Created repository drurhiw/eltex on GitHub
+  https://github.com/drurhiw/eltex
+root@eltex-practice2-pg1-v6:~# 
+
+9. mkdir ~/eltex/ && cd ~/eltex
+echo "# eltex summer school" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/drurhiw_github/eltex.git
+git status
+git push -u origin main
+mkdir -p module1/task1
+mkdir module1/task2
+mkdir module1/task3
+root@eltex-practice2-pg1-v6:~/eltex/module1/task1# git add *
+root@eltex-practice2-pg1-v6:~/eltex/module1/task1# git status
+On branch main
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   eltex-pg1-v6_part.log
+	new file:   eltex-pg1-v6_part3.log
+	new file:   eltex-pg1-v6_part3_gt50M.log
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	deleted:    ../../eltex-pg1-v6_part.log
+	deleted:    ../../eltex-pg1-v6_part3.log
+	deleted:    ../../eltex-pg1-v6_part3_gt50M.log
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	../../practice2_eltex-pg1-v6_part3.log
+
+root@eltex-practice2-pg1-v6:~/eltex/module1/task1# git commit -m'practice1'
+[main 776b6dd] practice1
+ 3 files changed, 208 insertions(+)
+ create mode 100644 module1/task1/eltex-pg1-v6_part.log
+ create mode 100644 module1/task1/eltex-pg1-v6_part3.log
+ create mode 100644 module1/task1/eltex-pg1-v6_part3_gt50M.log
+root@eltex-practice2-pg1-v6:~/eltex/module1/task1# git push 
+fatal: The current branch main has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin main
+
+To have this happen automatically for branches without a tracking
+upstream, see 'push.autoSetupRemote' in 'git help config'.
+
+root@eltex-practice2-pg1-v6:~/eltex/module1/task1# git push origin main
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+
+10. root@eltex-practice2-pg1-v6:~/eltex_clone# git clone https://github.com/drurhiw/eltex.git .
+
+11. root@eltex-practice2-pg1-v6:~/eltex_clone# git fetch origin
+remote: Enumerating objects: 14, done.
+remote: Counting objects: 100% (14/14), done.
+remote: Compressing objects: 100% (9/9), done.
+remote: Total 14 (delta 2), reused 14 (delta 2), pack-reused 0 (from 0)
+Unpacking objects: 100% (14/14), 3.27 KiB | 3.27 MiB/s, done.
+From https://github.com/drurhiw/eltex
+ * [new branch]      main       -> origin/main
+root@eltex-practice2-pg1-v6:~/eltex_clone# git log origin/main  
+commit 30545ca4fda8c4588e1e00a0a7134c482650bd0f (origin/main)
+Author: drurhiw <DS020904@mail.ru>
+Date:   Sun Jul 13 12:44:10 2025 +0000
+
+    delete
+
+commit 776b6dd06ae60bbef066e6559bb24a41bc8b69b5
+Author: drurhiw <DS020904@mail.ru>
+Date:   Sun Jul 13 12:25:50 2025 +0000
+
+    practice1
+
+commit 6af105ffb8b3a26134f6c949cd9bb042724ebc1b
+Author: drurhiw <DS020904@mail.ru>
+Date:   Sun Jul 13 12:24:00 2025 +0000
+
+    practice1
+
+commit febb661927782cc5507985211626b9cf0afdeb2f
+Author: drurhiw <DS020904@mail.ru>
+Date:   Sun Jul 13 06:17:20 2025 +0000
+
+root@eltex-practice2-pg1-v6:~/eltex_clone# git diff main origin/main
+root@eltex-practice2-pg1-v6:~/eltex_clone# git merge
+Already up to date.
+root@eltex-practice2-pg1-v6:~/eltex_clone# 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+commit 30545ca4fda8c4588e1e00a0a7134c482650bd0f (origin/main)
+Author: drurhiw <DS020904@mail.ru>
+Date:   Sun Jul 13 12:44:10 2025 +0000
+
+    delete
+
+commit 776b6dd06ae60bbef066e6559bb24a41bc8b69b5
+Author: drurhiw <DS020904@mail.ru>
+Date:   Sun Jul 13 12:25:50 2025 +0000
+
+    practice1
+
+commit 6af105ffb8b3a26134f6c949cd9bb042724ebc1b
+Author: drurhiw <DS020904@mail.ru>
+Date:   Sun Jul 13 12:24:00 2025 +0000
+
+    practice1
+
+commit febb661927782cc5507985211626b9cf0afdeb2f
+Author: drurhiw <DS020904@mail.ru>
+Date:   Sun Jul 13 06:17:20 2025 +0000
+
+
