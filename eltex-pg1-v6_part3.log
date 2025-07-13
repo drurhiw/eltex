@@ -1,0 +1,70 @@
+2. eltex-pg1-v6@eltex-2025-summer-16:08> mkdir -p D1/D2/D3
+eltex-pg1-v6@eltex-2025-summer-16:06> ls
+2025-01 2025-03 2025-05 2025-07 2025-09 2025-11 D1       report_part1.txt
+2025-02 2025-04 2025-06 2025-08 2025-10 2025-12 eltex-pg1-v6_part3.log   eltex-pg1-v6_part.log
+eltex-pg1-v6@eltex-2025-summer-16:08> cd D1
+eltex-pg1-v6@eltex-2025-summer-16:08> ls
+D2
+eltex-pg1-v6@eltex-2025-summer-16:08> cd D2
+eltex-pg1-v6@eltex-2025-summer-16:08> ls
+D3
+
+3.eltex-pg1-v6@eltex-2025-summer-16:08> cd D2/
+eltex-pg1-v6@eltex-2025-summer-16:08> touch file.txt
+
+4.eltex-pg1-v6@eltex-2025-summer-16:08> cat file.txt
+1 2 3 4 5 6 7 8 9 one two three
+
+5. eltex-pg1-v6@eltex-2025-summer-16:08> ln -s ../file.txt file_symlink.txt
+eltex-pg1-v6@eltex-2025-summer-16:08> ln ../file.txt file_hardlink.txt
+
+6.eltex-pg1-v6@eltex-2025-summer-16:08> ls -l
+total 4
+-rw-r--r-- 2 eltex-pg1-v6 eltex-pg1-v6 32 Jul   7 16:34 file_hardlink.txt
+lrwxrwxrwx 1 eltex-pg1-v6 eltex-pg1-v6 11 Jul   7 16:41 file_symlink.txt -> ../file.txt
+eltex-pg1-v6@eltex-2025-summer-16:08> cat file_hardlink.txt
+1 2 3 4 5 6 7 8 9 one two three
+eltex-pg1-v6@eltex-2025-summer-16:08> cat file_symlink.txt
+1 2 3 4 5 6 7 8 9 one two three
+
+7.eltex-pg1-v6@eltex-2025-summer-16:08> ls
+D3 file.txt
+eltex-pg1-v6@eltex-2025-summer-16:08> mv file.txt ../
+eltex-pg1-v6@eltex-2025-summer-16:08> cd
+eltex-pg1-v6@eltex-2025-summer-16:08> ls
+D2 file.txt
+
+8.Символическая ссылка сломалась, тк она указывает на несуществующий путь.
+eltex-pg1-v6@eltex-2025-summer-16:08> ls -l
+total 4
+-rw-r--r-- 2 eltex-pg1-v6 eltex-pg1-v6 32 Jul   7 16:34 file_hardlink.txt
+lrwxrwxrwx 1 eltex-pg1-v6 eltex-pg1-v6 11 Jul   7 16:41 file_symlink.txt -> ../file.txt
+
+9. eltex-pg1-v6@eltex-2025-summer-16:08> rm -rf D2
+eltex-pg1-v6@eltex-2025-summer-16:08> ls
+file.txt
+
+10. eltex-pg1-v6@eltex-2025-summer-16:08> find / -type f -size +20M 2>/dev/null > ${USER}_part3_gt50M.log
+
+11-12. eltex-pg1-v6@eltex-2025-summer-16:08> find ~/ -type f -mtime -1
+/home/eltex-pg1-v6/.viminfo
+/home/eltex-pg1-v6/report_parti. txt
+/home/eltex-pgl-v6/.lesshst
+/home/eltex-pgl-v6/eltex-pgl-v6_part3.log
+/home/eltex-pg1-v6/@USER_part. log
+/home/eltex-pgl-v6/eltex-pg1-v6_part3_gt50M.log
+/home/eltex-pg1-v6/D1/file.txt
+/home/eltex-pg1-v6/.bash history
+/home/eltex-pg1 -v6/.bashrc
+
+13.eltex-pg1-v6@eltex-2025-summer-16:08> which find
+/usr/bin/find
+
+14.eltex-pg1-v6@eltex-2025-summer-16:08> file $(which find)
+/usr/bin/find: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically Linked, interpreter /Lib64/Ld- Li
+
+15. eltex-pg1-v6@eltex-2025-summer-16:08> file /boot/initrd.img*
+/boot/initrd.img-6.1.0-27-amd64: ASCII cpio archive (SVR4 with no CRC)
+/boot/initrd.img-6.1.0-31-amd64: ASCII cpio archive (SVR4 with no CRC)
+/boot/initrd.img-6.1.0-32-amd64: ASCII cpio archive (SVR4 with no CRC)
+
