@@ -97,14 +97,13 @@ START_TEST(test6)
     Contact c = { "Y", "X", "000", "ss" };
     addContact(&book, &c);
 
-    deleteContact(&book, 5); // индекс вне диапазона
-    ck_assert_int_eq(book.size, 1); // размер не изменился
+    deleteContact(&book, 5); 
+    ck_assert_int_eq(book.size, 1); 
 
     freeList(&book);
 }
 END_TEST
 
-// Дополнительный тест для проверки редактирования всех полей
 START_TEST(test7)
 {
     ContactList book;
@@ -132,7 +131,6 @@ Suite *phone_suite(void)
 
     s = suite_create("Phone");
 
-    /* Core test case */
     tc_core = tcase_create("Core");
 
     tcase_add_test(tc_core, test1);
