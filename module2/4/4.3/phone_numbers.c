@@ -11,42 +11,83 @@ void freeNode(ContactNode* node)
     if (!node) return;
     freeNode(node->left);
     freeNode(node->right);
+    free(node->data);
     free(node);
 }
 
-void printContacts(ContactList* list) 
+void printTree(ContactNode* node, int level) 
 {
-    if ((*list).size == 0) {
+    if (!node) return;
+
+    printTree(node->right, level + 1);
+
+    for (int i = 0; i < level; i++) {
+        printf("    ");  
+    }
+    printf("%s %s\n", node->data->last_name, node->data->first_name);
+
+    printTree(node->left, level + 1);
+}
+
+void printTreeWrapper(ContactTree* tree)
+{
+    if (tree->root == NULL) {
+        printf("Телефонная книга пуста.\n");
+        return;
+    }
+    printTree(tree->root, 0);
+}
+
+void printContactsRecursive(ContactNode* node, int* count) {
+    if (!node) return;
+
+    printContactsRecursive(node->left, count);
+
+    printf("%d. %s %s\n", (*count) + 1, node->data->first_name, node->data->last_name);
+
+    if (strlen(node->data->phone_numbers) > 0)
+        printf("   Телефон: %s\n", node->data->phone_numbers);
+    else
+        printf("   Телефон: [не указан]\n");
+
+    if (strlen(node->data->socials) > 0)
+        printf("   Соцсети: %s\n", node->data->socials);
+    else
+        printf("   Соцсети: [не указаны]\n");
+
+    (*count)++;
+
+    printContactsRecursive(node->right, count);
+}
+
+void printContacts(ContactTree* tree) {
+    if (!tree || tree->root == NULL) {
         printf("Телефонная книга пуста.\n");
         return;
     }
 
     printf("\nСписок контактов:\n");
-    for (size_t i = 0; i < (*list).size; i++) {
-        printf("%zu. %s %s\n", i + 1, (*list).data[i].first_name, (*list).data[i].last_name);
-
-        if (strlen((*list).data[i].phone_numbers) > 0)
-            printf("   Телефон: %s\n", (*list).data[i].phone_numbers);
-        else
-            printf("   Телефон: [не указан]\n");
-
-        if (strlen((*list).data[i].socials) > 0)
-            printf("   Соцсети: %s\n", (*list).data[i].socials);
-        else
-            printf("   Соцсети: [не указаны]\n");
-    }
+    int count = 0;
+    printContactsRecursive(tree->root, &count);
 }
 
-void printError(ContactList* list)
+
+void printError(ContactTree* tree)
 {
     printf("Список заполнен, нельзя добавить контакт.\n");
-    printContacts(list);
+    printContacts(tree);
 }
 
 ContactNode* createNode(Contact c)
 {
     ContactNode* node = malloc(sizeof(ContactNode));
-    node->data = c;
+    node->data = malloc(sizeof(Contact));  
+    if (!node->data) {
+        free(node);
+        return NULL;
+    }
+
+    *(node->data) = c;
     node->left = NULL;
     node->right = NULL;
     return node;
@@ -54,77 +95,132 @@ ContactNode* createNode(Contact c)
 
 ContactNode* insertNode(ContactNode* root, Contact c, int* insert)
 {
-    
+    if (root == NULL)
+    {
+        *insert = 1;
+        return createNode(c);;
+    }
+
+    int cmp = strcmp(c.last_name, root->data->last_name);
+    if (cmp < 0)
+    {
+        root->left = insertNode(root->left, c, insert);
+    }
+    else if (cmp > 0)
+    {
+        root->right = insertNode(root->right, c, insert);
+    }
+    else 
+    {
+        *insert = 0;
+    }
+    return root;
 }
 
-void addContact(ContactList* list, Contact* c)
+void addContact(ContactTree* tree, Contact* c)
 {
-    ContactList l = *list;
-    if (l.size < l.capacity)
+    int inserted = 0;
+    tree->root = insertNode(tree->root, *c, &inserted);
+    if (inserted)
     {
-        l.data[l.size] = *c;
-        l.size++;
-        *list = l;
-    } 
+        tree->size++;
+    }
     else
     {
-        printError(list);
-        exit(1);
+        printError(tree);
     }
 }
 
-void editContact(ContactList* list, size_t index, const char* new_first, const char* new_last, const char* new_phone, const char* new_socials)
+void editContact(ContactTree* tree, const char* old_last_name, Contact* updated_contact)
 {
-    if ((*list).size == 0 || index >= (*list).size)
+    ContactNode* node = findNode(tree->root, old_last_name);
+    if (!node)
     {
         return;
     }
 
-    Contact* c = &(*list).data[index];
+    tree->root = deleteContact(tree->root, old_last_name);
+    tree->size--;
 
-    if (new_first !=  NULL && strlen(new_first) > 0)
-    {
-        strncpy((*c).first_name, new_first, MAX_STR);
-    }
+    addContact(tree, updated_contact);
+}
 
-    if (new_last !=  NULL && strlen(new_last) > 0)
-    {
-        strncpy((*c).last_name, new_last, MAX_STR);
-    }
+ContactNode* findNode(ContactNode* root, const char* last_name)
+{
+    if (root == NULL) return NULL;
 
-    if (new_phone !=  NULL && strlen(new_phone) > 0)
-    {
-        strncpy((*c).phone_numbers, new_phone, MAX_STR);
-    }
+    int cmp = strcmp(last_name, root->data->last_name);
 
-    if (new_socials !=  NULL && strlen(new_socials) > 0)
-    {
-        strncpy((*c).socials, new_socials, MAX_STR);
+    if (cmp == 0) {
+        return root;  
+    } else if (cmp < 0) {
+        return findNode(root->left, last_name);
+    } else {
+        return findNode(root->right, last_name);
     }
 }
 
 
-void deleteContact(ContactList* list, size_t index)
+ContactNode* findMinNode(ContactNode* node)
 {
-    size_t size = (*list).size;
-
-    if (size == 0)
+    while (node && node->left != NULL)
     {
-        return;
+        node = node->left;
     }
-    else if (index >= size)
-    {
-        return;
-    }
+    return node;
+}
 
-    size_t i = index;
-    while (i < size - 1)
+ContactNode* deleteContact(ContactNode* root, const char* last_name)
+{
+    if (root == NULL)
     {
-        (*list).data[i] = (*list).data[i + 1];
-        i++;
+        return NULL;
     }
 
-    (*list).size = size - 1;
+    int cmp = strcmp(last_name, root->data->last_name);
+
+    if (cmp < 0)
+    {
+        root->left = deleteContact(root->left, last_name);
+    }
+    else if (cmp > 0)
+    {
+        root->right = deleteContact(root->right, last_name);
+    }
+    else 
+    {
+        //Если потомков нет
+        if (root->left == NULL && root->right == NULL)
+        {
+            free(root);
+            return NULL;
+        }
+
+        //Если только правый потомок
+        else if (root->left == NULL)
+        {
+            ContactNode* temp = root->right;
+            free(root);
+            return temp;
+        }
+
+        //Если только левый потомок
+        else if (root->right == NULL)
+        {
+            ContactNode* temp = root->left;
+            free(root);
+            return temp;
+        }
+
+        //Если два потомка
+        else 
+        {
+            ContactNode* minRight = findMinNode(root->right);
+            *(root->data) = *(minRight->data);
+            root->right = deleteContact(root->right, minRight->data->last_name);
+        }
+    }
+    return root;
 
 }
 

@@ -7,7 +7,6 @@
 #include <string.h>
 
 #define MAX_STR 100
-#define CAPACITY 10
 
 typedef struct
 {
@@ -17,7 +16,7 @@ typedef struct
     char socials[MAX_STR];
 } Contact;
 
-typedef struct
+typedef struct ContactNode
 {
     Contact* data;
     struct ContactNode* left;
@@ -32,14 +31,20 @@ typedef struct
 
 void initContact(ContactTree* tree);
 void freeNode(ContactNode* node);
-void printContacts(ContactList* list);
-void printError(ContactList* list);
+void printError(ContactTree* tree);
+
+void printTree(ContactNode* node, int level);
+void printTreeWrapper(ContactTree* tree);
+void printContactsRecursive(ContactNode* node, int* count);
+void printContacts(ContactTree* tree);
 
 ContactNode* createNode(Contact c);
+ContactNode* insertNode(ContactNode* root, Contact c, int* insert);
 
-void addContact(ContactList* list, Contact* c);
-void deleteContact(ContactList* list, size_t index);
-void editContact(ContactList* list, size_t index, const char* new_first, const char* new_last, const char* new_phone, const char* new_socials);
-
+void addContact(ContactTree* tree, Contact* c);
+ContactNode* findMinNode(ContactNode* node);
+ContactNode* deleteContact(ContactNode* root, const char* last_name);
+void editContact(ContactTree* tree, const char* old_last_name, Contact* updated_contact);
+ContactNode* findNode(ContactNode* root, const char* last_name);
 
 #endif //BOOK_H

@@ -2,8 +2,8 @@
 
 int main()
 {
-    ContactList book;
-    initContact(&book, CAPACITY);
+    ContactTree book;
+    initContact(&book);
     
     while(1)
     {
@@ -37,76 +37,93 @@ int main()
 
             addContact(&book, &c);
 
-            printContacts(&book);
+            printTreeWrapper(&book);
         }
 
         if (choice == 'd' || choice == 'D')
         {
-            int index;
-            printf("Введите индекс контакта: ");
-            scanf("%d", &index);
-            if (index < 1 || index > book.size) 
-            {
-                printf("Ошибка: неверный номер контакта!\n");
-                continue; 
-            }
-            deleteContact(&book, index - 1);
-            printContacts(&book);
+            Contact c;
+            printf("Введите фамилию контакта: ");
+            scanf("%99s", c.last_name);
+
+            book.root = deleteContact(book.root, c.last_name);
+
+            if (book.root == NULL)
+                book.size = 0;
+            else
+                book.size--;
+            printTreeWrapper(&book);
         } 
         
         if (choice == 'e' || choice == 'E')
         {
-            int index;
-            char new_first[MAX_STR] = "";
-            char new_last[MAX_STR] = "";
-            char new_phone[MAX_STR] = "";
-            char new_socials[MAX_STR] = "";
+            char old_last_name[MAX_STR];
+            char buf[MAX_STR];
+            Contact *original = NULL;
+            Contact updated;
 
-            printf("Введите номер контакта для редактирования: ");
-            scanf("%d", &index);
+            printf("Введите фамилию контакта для редактирования: \n");
+            scanf("%99s", old_last_name);
 
-            if (index < 1 || index > book.size) 
-            {
-                printf("Ошибка: неверный номер контакта!\n");
-                continue; 
+            int c;
+            while ((c = getchar()) != '\n') { } 
+
+
+            ContactNode* node = findNode(book.root, old_last_name);
+            if (!node) {
+                printf("Контакт не найден.\n");
+                continue;
             }
 
-            int ch;
-            ch = getchar() != '\n';
+            updated = *(node->data);
 
-            printf("Новое имя: ");
-            fgets(new_first, MAX_STR, stdin);
-            new_first[strlen(new_first) - 1] = '\0';
+            printf("Новое имя: \n");
+            if (fgets(buf, MAX_STR, stdin)) 
+            {
+                buf[strcspn(buf, "\n")] = '\0';
+                if (strlen(buf) > 0) 
+                {
+                    strncpy(updated.first_name, buf, MAX_STR);
+                }
+            }
+        
+            printf("Новая фамилия: \n");
+            if (fgets(buf, MAX_STR, stdin)) 
+            {
+                buf[strcspn(buf, "\n")] = '\0';
+                if (strlen(buf) > 0) 
+                {
+                    strncpy(updated.last_name, buf, MAX_STR);
+                }
+            }
+        
+            printf("Новый телефон: \n");
+            if (fgets(buf, MAX_STR, stdin)) 
+            {
+                buf[strcspn(buf, "\n")] = '\0';
+                if (strlen(buf) > 0) 
+                {
+                    strncpy(updated.phone_numbers, buf, MAX_STR);
+                }
+            }
+        
+            printf("Новые соцсети: \n");
+            if (fgets(buf, MAX_STR, stdin)) 
+            {
+                buf[strcspn(buf, "\n")] = '\0';
+                if (strlen(buf) > 0) 
+                {
+                    strncpy(updated.socials, buf, MAX_STR);
+                }
+            }
 
-            printf("Новая фамилия: ");
-            fgets(new_last, MAX_STR, stdin);
-            new_last[strlen(new_last) - 1] = '\0';
-
-            printf("Новый телефон: ");
-            fgets(new_phone, MAX_STR, stdin);
-            new_phone[strlen(new_phone) - 1] = '\0';
-
-            printf("Новые соцсети: ");
-            fgets(new_socials, MAX_STR, stdin);
-            new_socials[strlen(new_socials) - 1] = '\0';
-
-            const char* first = NULL;
-            const char* last = NULL;
-            const char* phone = NULL;
-            const char* social = NULL;
-
-            if (strlen(new_first) > 0) first = new_first;
-            if (strlen(new_last) > 0) last = new_last;
-            if (strlen(new_phone) > 0) phone = new_phone;
-            if (strlen(new_socials) > 0) social = new_socials;
-
-            editContact(&book, index - 1, first, last, phone, social);
-            printContacts(&book);
+            editContact(&book, old_last_name, &updated);
+            printTreeWrapper(&book);
         }
         
     }
 
 
-    freeList(&book);
+    freeNode(book.root);
     return 0;
 }
