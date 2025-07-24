@@ -131,6 +131,7 @@ Suite *phone_suite(void)
 
     s = suite_create("Phone");
 
+    /* Core test case */
     tc_core = tcase_create("Core");
 
     tcase_add_test(tc_core, test1);
