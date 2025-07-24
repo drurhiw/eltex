@@ -23,8 +23,8 @@ START_TEST(test2)
     Contact c = { "X", "Y", "000", "ss" };
     addContact(&book, &c);
 
-    deleteContact(&book, 5); // индекс вне диапазона
-    ck_assert_int_eq(book.size, 1); // размер не изменился
+    deleteContact(&book, 5);
+    ck_assert_int_eq(book.size, 1); 
 
     freeList(&book);
 }
