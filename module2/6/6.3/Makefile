@@ -1,32 +1,19 @@
 CC = gcc
 LDFLAGS = -ldl
 
-FUNC_DIR = funcs
-LIB_DIR = libs
+TARGET = calculator
+LIB = libcalc.so
 
-LIBS = libsum.so libsub.so libmul.so libdivide.so
+all: $(TARGET)
 
-all: calculator run
+$(LIB): calculator2.c calculator2.h
+	$(CC) -shared -o $(LIB) calculator2.c
 
-libs: $(LIBS)
+$(TARGET): main.c $(LIB)
+	$(CC) -o $(TARGET) main.c $(LDFLAGS)
 
-libsum.so: $(FUNC_DIR)/sum.c calculator2.h
-	$(CC) -shared -o $(LIB_DIR)/$@ $(FUNC_DIR)/sum.c
-
-libsub.so: $(FUNC_DIR)/sub.c calculator2.h
-	$(CC) -shared -o $(LIB_DIR)/$@ $(FUNC_DIR)/sub.c
-
-libmul.so: $(FUNC_DIR)/mul.c calculator2.h
-	$(CC) -shared -o $(LIB_DIR)/$@ $(FUNC_DIR)/mul.c
-
-libdivide.so: $(FUNC_DIR)/divide.c calculator2.h
-	$(CC) -shared -o $(LIB_DIR)/$@ $(FUNC_DIR)/divide.c
-
-calculator: main.c calculator2.h
-	$(CC) -o $@ main.c $(LDFLAGS)
-
-run:
-	./calculator
+run: $(TARGET)
+	LD_LIBRARY_PATH=. ./$(TARGET)
 
 clean:
-	rm -f calculator
+	rm -f $(TARGET) $(LIB)

@@ -8,5 +8,6 @@
 #include <stdlib.h>
 
 typedef double (*func)(int, ...);
+extern func operations[];
 
 #endif //CALCULATOR2_H

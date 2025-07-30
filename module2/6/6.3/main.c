@@ -8,19 +8,22 @@
 #include <dlfcn.h>
 
 #define MAX_FUNCS 10
-#define MAX_PATH 256
+
+func operations[MAX_FUNCS];
 
 int main()
 {
-    const char *lib_names[] = {
-        "./libs/libsum.so",
-        "./libs/libsub.so",
-        "./libs/libmul.so",
-        "./libs/libdivide.so"
-    };
+    void* handle = dlopen("./libcalc.so", RTLD_LAZY);
+    
+    dlerror();
 
-    void *handles[4];
-    func operations[4];
+    operations[0] = (func)dlsym(handle, "sum");
+    operations[1] = (func)dlsym(handle, "sub");
+    operations[2] = (func)dlsym(handle, "mul");
+    operations[3] = (func)dlsym(handle, "divide");
+
+    char* err = dlerror();
+
 
     while(true)
     {
@@ -84,5 +87,6 @@ int main()
         }
         printf("Результат: %.2f\n", result);
     }
+    dlclose(handle);
     return 0;
 }
