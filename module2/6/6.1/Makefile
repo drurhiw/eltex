@@ -23,4 +23,4 @@ test_program: phone_numbers.o test.o
 	$(CC) phone_numbers.o test.o -o test_program $(LDFLAGS)
 
 clean:
-	rm -f *.o book test_program
+	rm -f *.o phonebook test_program
