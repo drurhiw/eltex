@@ -6,7 +6,7 @@ LIB_DIR = libs
 
 LIBS = libsum.so libsub.so libmul.so libdivide.so
 
-all: libs calculator
+all: calculator run
 
 libs: $(LIBS)
 
@@ -29,4 +29,4 @@ run:
 	./calculator
 
 clean:
-	rm -f $(LIB_DIR)/*.so calculator
+	rm -f calculator
